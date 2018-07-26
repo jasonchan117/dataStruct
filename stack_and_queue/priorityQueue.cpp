@@ -42,6 +42,7 @@ int main(){
         pop(p);
         output(p);
     }
+    clear(p);
     return 0;
 }
 Heap *init(int n){
@@ -68,7 +69,7 @@ void push(Heap *h,int value){
     while(i>1){
         if(h->data[i]<=h->data[i>>1]) break;
         h->data[i]^=h->data[i>>1];
-        h->data[i/2]^=h->data[i];
+        h->data[i>>1]^=h->data[i];
         h->data[i]^=h->data[i>>1];
         i>>1;
     }
@@ -86,10 +87,10 @@ void pop(Heap *h){
     h->data[1]^=h->data[h->n];
     h->n-=1;
     int ind=1;
-    while(ind*2 < h->n){
+    while(ind*2 <= h->n){
         int swap_ind=ind;
         if(h->data[ind*2]>h->data[swap_ind]) swap_ind=ind*2;
-        if(ind*2+1<=h->n&&h->data[ind*2+1]>h->data[swap_ind]) swap_ind=ind*2+1;
+        if((ind<<1|1)<=h->n&&h->data[(ind<<1)|1]>h->data[swap_ind]) swap_ind=ind<<1|1;
         if(swap_ind==ind) break;
         
         h->data[ind]^=h->data[swap_ind];
