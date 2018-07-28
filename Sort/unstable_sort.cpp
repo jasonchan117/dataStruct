@@ -50,16 +50,18 @@ void select_sort(int *num,int n){
 }
 void quick_sort(int *num,int l,int r){
     while(r-l>=16) {
-        int x=l,y=r,z=num[l];
-        while(x<y){
-            while(x < y && num[y]>=z) --y;
-            if(x<y) num[x++] =num[y];
-            while(x < y && num[x]<=z) ++x;
-            if(x < y) num[y--]=num[x];
-        }
-        num[x]=z;
-        quick_sort(num,l,x-1);
-        l=x+1;
+        int x=l,y=r,z=num[rand()%(r-l+1)+l];
+        do{
+            while(num[x]<z) ++x;
+            while(num[y]>z) --y;
+            if(x <= y) {
+                swap(num[x],num[y]);
+                ++x;
+                --y;
+            }
+        }while(x<=y);
+        quick_sort(num,l,y);
+        l=x;
     }
     ungarded_insert_sort(num+l,r-l+1);
 }
