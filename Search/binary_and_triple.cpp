@@ -24,14 +24,55 @@ double three_point_search(double a,double b,double c){
     }
     return head;
 }
-int main(){
-    
+int binary_search1(int *num,int n,int x){
+    int head=0,tail=n-1,mid;
+    while(head<=tail){
+        mid=(head+tail)/2;
+        if(num[mid]==x) return mid;
+        if(num[mid]<x){
+            head=mid+1;
 
+        }
+        else {
+            tail=mid-1;
+        }
+    }
+    return -1;
+}
+//11111110000000
+int binary_search2(int *num,int n.int x){
+    
+    int head=-1;
+    int tail=n-1,mid;
+    while(head<tail){
+        mid=(head+tail+1)/2;
+        if(num[mid]==1){
+            head=mid;
+        }else{
+            tail=mid-1;
+        }
+    }
+    return head;
+}
+//000000011111111
+int binary_search3(int *num ,int n,int x){
+    int head=0;
+    int tail=n,mid;
+    while(head<tail){
+        mid(head+tail)/2;
+        if(num[mid]==0){
+            tail=mid;
+
+        }else{
+            head=mid+1;
+        }
+    }
+    return head ==n ?-1:head;
+}
+int main(){
     double a,b,c;
     while(~scanf("%lf %lf %lf",&a,&b,&c)){
         printf("%lf\n",three_point_search(a,b,c));
     }
-    
-
     return 0;
 }
