@@ -8,7 +8,37 @@
 #include<iostream>
 #include<stdlib.h>
 #include<time.h>
-using namespace std;
+#include<string.h>
+typedef struct Data{
+    char *str;
+    struct Data *next;
+}Data;
+
+typedef struct HashTable{
+    Data *data;
+    int size;
+    int (*hash_func)(Data *);
+    int cnt;
+    int flag;
+}HashTable;
+
+
+
+int __APHash(Data *data){
+    return APHash(data->str);
+}
+int __BKDRHash(Data *data){
+    return BKDRHash(data->str);
+}
+int __ZobristHash(Data *data){
+    return ZobristHash(data->str);
+}
+
+
+
+
+
+
 int APHash(const char *str){
     int hash=0;
     for(int i=0;str[i];i++){
@@ -52,7 +82,81 @@ int ZobristHash(const char *str){
     return hash & 0x7fffffff;
 }
 
+
+
+
+int MyHash(const char *str){
+    int hash=1;
+    for(int i=0;str[i];i++){
+        hash *=str[i];
+    }
+    return hash &0x7fffffff;
+}
+
+HashTable *init(int size,int (*func)(Data *)){
+    HashTable *p=(HashTable *)malloc(sizeof(HashTable));
+    p->data=(Data *)calloc(size,sizeof(Data));
+    p->size=size;
+    p->cnt=0;
+    p->hash_func=func;
+    return p;
+
+}
+
+void clear(HashTable *h){
+    if(h==NULL) return ;
+    free(h->data);
+    free(h);
+    return ;
+}
+
+int query(HashTable *h,const char *str){
+    int ind = h->hash_func(str)%h->size;
+    Data *p=h->data[ind].next;
+    while(p){
+        if(strcmp(p->str,str)==0) return -1;
+        p=p->next;
+        h->cnt++;
+    }
+    return ind;
+}
+
+void insert(HashTable *h,const char *str){
+    int ind=query(h,str);
+    if(ind == -1) return ;
+    Data *data = (Data *)malloc(sizeof(Data));
+    
+    data->str=strdup(str);
+    data->next=h->data[ind].next;
+    h->data[ind].next=data;
+    return ;
+}
+
+
+
 int main(){
+    HashTable *apHashTable=init(100,ApHash);
+    HashTable *bkdrHashTable=init(100,BKDRhash);
+    HashTable *zobristHashTable = init(100,ZobristHash);
+    HashTable *myHashTable= init(100,MyHash);
+    #define MAX_TEST_CNT 10000
+    for(int i=0;i<MAX_TEST_CNT;i++){
+        char str[7]={0};
+        for(int j=0;j<6;j++){
+            str[j]=rand()%26+'a';
+        }
+        str[6]=0;
+        insert(apHashTable,str);
+        insert(bkdrHashTable,str);
+        insert(zobristHashTable,str);
+    }
+    printf("AP(%d)=%d\n",MAX_TEST_CNT,apHashTable->cnt);
+    printf("NK(%d)=%d\n",MAX_TEST_CNT,bkdrHashTable->cnt);
+    printf("ZO(%d)=%d\n",MAX_TEST_CNT,zobristHashTable->cnt);
+    printf("MY(%d)=%d\n",MAX_TEST_CNT,myHashTable->cnt);
+    #undef MAX_TEST_CNT
+
+
 
     srand(time(0));
 
