@@ -1,2 +1,2 @@
-# dataStruct
-Data Struct code
+# Data Structure
+Data strure practice using c++.
