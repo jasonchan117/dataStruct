@@ -1,2 +1,2 @@
 # Data Structure
-Data strure practice using c++.
+Data structure practice using c++.
